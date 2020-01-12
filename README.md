@@ -10,7 +10,7 @@ I use **MySQL** for Write Database and **MongoDB** for Read Database.<br/>
 ![CQRS/ES_3](/img/cqrs_2-min.gif)
 ![CQRS/ES_4](/img/cqrs_3-min.gif)
 
-###References
+### References
 - Smooth implementation of CQRS/ES with Spring Boot and Axon framework: https://www.nexocode.com/blog/posts/smooth-implementation-cqrs-es-with-sping-boot-and-axon/
 - CQRS: https://martinfowler.com/bliki/CQRS.html
 - Event sourcing: https://martinfowler.com/eaaDev/EventSourcing.html
