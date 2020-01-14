@@ -24,12 +24,15 @@ public class EventSource implements IEntity<EventSource> {
 
     private Date occurred;
 
-    public EventSource(UUID uuid, UUID aggregateId, String type, String payload) {
+    private int version;
+
+    public EventSource(UUID uuid, UUID aggregateId, String type, String payload, int version) {
         this.id = uuid.toString();
         this.aggregateId = aggregateId.toString();
         this.type = type;
         this.payload = payload;
         this.occurred = new Date();
+        this.version = version;
     }
 
     @Override

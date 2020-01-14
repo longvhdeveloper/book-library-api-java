@@ -3,7 +3,7 @@ package vn.vlong.booklibrary.api.user.command.handler;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
-import vn.vlong.booklibrary.api.shared.event.EventSourcePublisher;
+import vn.vlong.booklibrary.api.shared.eventbus.EventSourcePublisher;
 import vn.vlong.booklibrary.api.shared.handler.ICommandHandler;
 import vn.vlong.booklibrary.api.user.command.domain.command.CreateUserCommand;
 import vn.vlong.booklibrary.api.user.command.domain.entity.User;
@@ -36,7 +36,10 @@ public class CreateUserCommandHandler implements ICommandHandler<CreateUserComma
                 new Email(command.getEmail()), new Password(command.getPassword()));
 
         userCommandRepository.saveAndFlush(user);
-        eventEventSourcePublisher.publish(new UserCreatedEvent(this, user
+        eventEventSourcePublisher.publish(new UserCreatedEvent(this, user.getUserId().getId(), user.getVersion(),
+                user.getFullName().getFirstName(), user.getFullName().getLastName(), user.getEmail().getEmail(),
+                user.getPassword().getPassword(), user.isActive(), user.getActiveCode().getActiveCode(),
+                user.getUserRole().getRole().getValue()
         ));
     }
 }
