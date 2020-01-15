@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 public class GetUsersRequest {
     private String keyword = "";
 
-    private boolean isActive = false;
+    private Boolean isActive;
 
-    private int role = 1;
+    private Integer role;
 
     private int limit = 10;
 
