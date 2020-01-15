@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FullName.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Book Library API</a> &gt; <a href="index.source.html" class="el_package">vn.vlong.booklibrary.api.user.command.domain.valueobject</a> &gt; <span class="el_source">FullName.java</span></div><h1>FullName.java</h1><pre class="source lang-java linenums">package vn.vlong.booklibrary.api.user.command.domain.valueobject;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
+import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.util.Objects;
+
+@Embeddable
+<span class="nc" id="L13">@NoArgsConstructor</span>
+public class FullName implements IValueObject&lt;FullName&gt; {
+
+<span class="fc" id="L16">    @Getter</span>
+    @Column(name = &quot;first_name&quot;)
+    private String firstName;
+
+<span class="fc" id="L20">    @Getter</span>
+    @Column(name = &quot;lastName&quot;)
+    private String lastName;
+
+<span class="fc" id="L24">    public FullName(String firstName, String lastName) {</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        if (StringUtils.isEmpty(firstName)) {</span>
+<span class="fc" id="L26">            throw new IllegalArgumentException(&quot;First name is not valid&quot;);</span>
+        }
+
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (StringUtils.isEmpty(lastName)) {</span>
+<span class="fc" id="L30">            throw new IllegalArgumentException(&quot;Last name is not valid&quot;);</span>
+        }
+
+<span class="fc" id="L33">        this.firstName = firstName;</span>
+<span class="fc" id="L34">        this.lastName = lastName;</span>
+<span class="fc" id="L35">    }</span>
+
+    @Override
+    public boolean isSameValue(FullName other) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (Objects.isNull(other)) {</span>
+<span class="nc" id="L40">            return false;</span>
+        }
+
+<span class="nc bnc" id="L43" title="All 4 branches missed.">        return this.firstName.equals(other.getFirstName()) &amp;&amp; this.lastName.equals(other.getLastName());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

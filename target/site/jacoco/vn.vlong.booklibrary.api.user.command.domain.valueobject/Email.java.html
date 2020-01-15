@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Email.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Book Library API</a> &gt; <a href="index.source.html" class="el_package">vn.vlong.booklibrary.api.user.command.domain.valueobject</a> &gt; <span class="el_source">Email.java</span></div><h1>Email.java</h1><pre class="source lang-java linenums">package vn.vlong.booklibrary.api.user.command.domain.valueobject;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.apache.commons.validator.routines.EmailValidator;
+import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
+
+import javax.persistence.Embeddable;
+import java.util.Objects;
+
+@Embeddable
+<span class="nc" id="L12">@NoArgsConstructor</span>
+public class Email implements IValueObject&lt;Email&gt; {
+
+<span class="fc" id="L15">    @Getter</span>
+    private String email;
+
+<span class="fc" id="L18">    public Email(final String email) {</span>
+<span class="fc" id="L19">        EmailValidator emailValidator = EmailValidator.getInstance();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (!emailValidator.isValid(email)) {</span>
+<span class="fc" id="L21">            throw new IllegalArgumentException(String.format(&quot;Email %s is not valid&quot;, email));</span>
+        }
+<span class="fc" id="L23">        this.email = email;</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public boolean isSameValue(Email other) {
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (Objects.isNull(other)) {</span>
+<span class="nc" id="L29">            return false;</span>
+        }
+<span class="nc" id="L31">        return other.getEmail().equals(email);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: vn.vlong.booklibrary.api.user.command.domain.entity.UserTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.346 s - in vn.vlong.booklibrary.api.user.command.domain.entity.UserTest

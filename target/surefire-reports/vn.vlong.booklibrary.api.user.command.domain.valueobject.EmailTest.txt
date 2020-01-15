@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: vn.vlong.booklibrary.api.user.command.domain.valueobject.EmailTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.702 s - in vn.vlong.booklibrary.api.user.command.domain.valueobject.EmailTest

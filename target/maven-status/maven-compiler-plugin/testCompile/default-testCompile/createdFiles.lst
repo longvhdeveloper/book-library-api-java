@@ -1,0 +1,9 @@
+vn\vlong\booklibrary\api\user\command\domain\valueobject\UserRoleTest.class
+vn\vlong\booklibrary\api\user\command\domain\valueobject\PasswordTest.class
+vn\vlong\booklibrary\api\BookLibraryApplicationTests.class
+vn\vlong\booklibrary\api\user\command\domain\valueobject\FullNameTest.class
+vn\vlong\booklibrary\api\user\command\handler\CreateUserCommandHandlerTest.class
+vn\vlong\booklibrary\api\user\command\domain\entity\UserTest.class
+vn\vlong\booklibrary\api\user\command\domain\valueobject\EmailTest.class
+vn\vlong\booklibrary\api\user\command\domain\valueobject\ActiveCodeTest.class
+vn\vlong\booklibrary\api\user\command\domain\valueobject\UserIdTest.class
