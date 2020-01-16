@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 import vn.vlong.booklibrary.api.user.query.controller.request.GetUsersRequest;
 import vn.vlong.booklibrary.api.user.query.domain.entity.QUser;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
@@ -21,6 +22,7 @@ public class UserQueryService {
         this.userQueryRepository = userQueryRepository;
     }
 
+    @LogExecutionTime
     public List<User> getUsers(GetUsersRequest request) {
         QUser qUser = QUser.user;
 
