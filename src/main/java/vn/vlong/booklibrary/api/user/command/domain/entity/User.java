@@ -6,15 +6,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.Type;
 import vn.vlong.booklibrary.api.user.command.domain.valueobject.*;
 
-import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_email", columnList = "email"),
+        @Index(name = "idx_is_active", columnList = "is_active"),
+        @Index(name = "idx_role", columnList = "role")
+})
 @NoArgsConstructor
 public class User {
 
@@ -36,6 +37,7 @@ public class User {
 
     @Getter
     @Type(type = "org.hibernate.type.NumericBooleanType")
+    @Column(name = "is_active")
     private boolean isActive;
 
     @Embedded
@@ -46,11 +48,8 @@ public class User {
     @Getter
     private UserRole userRole;
 
-    @Getter
-    private int version;
-
     public User(UserId userId, FullName fullName, Email email, Password password, boolean isActive,
-                ActiveCode activeCode, UserRole userRole, int version) {
+                ActiveCode activeCode, UserRole userRole) {
 
         checkArgument(userId, fullName, email, password, activeCode, userRole);
 
@@ -61,12 +60,11 @@ public class User {
         this.isActive = isActive;
         this.activeCode = activeCode;
         this.userRole = userRole;
-        this.version = version;
     }
 
     public static User create(FullName fullName, Email email, Password password) {
-        return new User(new UserId(UUID.randomUUID()), fullName, email, password, false,
-                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE), 1);
+        return new User(new UserId(UUID.randomUUID(), 1), fullName, email, password, false,
+                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE));
     }
 
     private void checkArgument(UserId userId, FullName fullName, Email email, Password password,

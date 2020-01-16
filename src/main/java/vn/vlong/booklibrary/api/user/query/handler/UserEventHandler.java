@@ -19,16 +19,9 @@ public class UserEventHandler implements IEventHandler {
 
     @EventListener
     public void handle(UserCreatedEvent userCreatedEvent) {
-        User user = User.builder().id(userCreatedEvent.getAggregateId().toString())
-                .firstName(userCreatedEvent.getFirstName())
-                .lastName(userCreatedEvent.getLastName())
-                .email(userCreatedEvent.getEmail())
-                .password(userCreatedEvent.getPassword())
-                .isActive(userCreatedEvent.isActive())
-                .activeCode(userCreatedEvent.getActiveCode())
-                .role(userCreatedEvent.getRole())
-                .version(userCreatedEvent.getVersion())
-                .build();
+        User user = new User(userCreatedEvent.getAggregateId().toString(), userCreatedEvent.getFirstName(),
+                userCreatedEvent.getLastName(), userCreatedEvent.getEmail(), userCreatedEvent.getPassword(),
+                userCreatedEvent.isActive(), userCreatedEvent.getActiveCode(), userCreatedEvent.getRole());
         userQueryRepository.save(user);
     }
 }
