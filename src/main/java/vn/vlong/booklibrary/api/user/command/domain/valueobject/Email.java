@@ -1,15 +1,11 @@
 package vn.vlong.booklibrary.api.user.command.domain.valueobject;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
 
-import javax.persistence.Embeddable;
 import java.util.Objects;
 
-@Embeddable
-@NoArgsConstructor
 public class Email implements IValueObject<Email> {
 
     @Getter

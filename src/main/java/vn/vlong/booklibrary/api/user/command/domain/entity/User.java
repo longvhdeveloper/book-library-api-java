@@ -1,77 +1,66 @@
 package vn.vlong.booklibrary.api.user.command.domain.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hibernate.annotations.Type;
+import vn.vlong.booklibrary.api.shared.domain.entity.BaseEntity;
+import vn.vlong.booklibrary.api.shared.domain.event.Event;
 import vn.vlong.booklibrary.api.user.command.domain.valueobject.*;
 
-import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-@Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idx_email", columnList = "email"),
-        @Index(name = "idx_is_active", columnList = "is_active"),
-        @Index(name = "idx_role", columnList = "role")
-})
-@NoArgsConstructor
-public class User {
+public class User extends BaseEntity<User> {
 
-    @EmbeddedId
-    @Getter
-    private UserId userId;
-
-    @Embedded
-    @Getter
-    private FullName fullName;
-
-    @Embedded
     @Getter
     private Email email;
 
-    @Embedded
+    @Getter
+    private FullName fullName;
+
     @Getter
     private Password password;
 
     @Getter
-    @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "is_active")
+
     private boolean isActive;
 
-    @Embedded
     @Getter
     private ActiveCode activeCode;
 
-    @Embedded
     @Getter
     private UserRole userRole;
 
-    public User(UserId userId, FullName fullName, Email email, Password password, boolean isActive,
-                ActiveCode activeCode, UserRole userRole) {
+    @Getter
+    private int version;
 
-        checkArgument(userId, fullName, email, password, activeCode, userRole);
+    public User(FullName fullName, Email email, Password password, boolean isActive,
+                ActiveCode activeCode, UserRole userRole, int version) {
+        checkArgument(fullName, email, password, activeCode, userRole);
 
-        this.userId = userId;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.isActive = isActive;
         this.activeCode = activeCode;
         this.userRole = userRole;
+        this.version = version;
+    }
+
+    public User(List<Event> events) {
+        this.apply(events);
     }
 
     public static User create(FullName fullName, Email email, Password password) {
-        return new User(new UserId(UUID.randomUUID(), 1), fullName, email, password, false,
-                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE));
+        return new User(fullName, email, password, false,
+                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE), 1);
     }
 
-    private void checkArgument(UserId userId, FullName fullName, Email email, Password password,
+    public String getStream() {
+        return "user";
+    }
+
+    private void checkArgument(FullName fullName, Email email, Password password,
                                ActiveCode activeCode, UserRole userRole) {
-        if (Objects.isNull(userId)) {
-            throw new IllegalArgumentException("UserId is not valid");
-        }
 
         if (Objects.isNull(fullName)) {
             throw new IllegalArgumentException("FullName is not valid");
@@ -92,5 +81,13 @@ public class User {
         if (Objects.isNull(userRole)) {
             throw new IllegalArgumentException("UserRole is not valid");
         }
+    }
+
+    @Override
+    public boolean isSameIdentity(User other) {
+        if (Objects.isNull(other)) {
+            return false;
+        }
+        return email.isSameValue(other.getEmail());
     }
 }

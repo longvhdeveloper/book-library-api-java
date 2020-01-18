@@ -1,13 +1,9 @@
 package vn.vlong.booklibrary.api.user.command.domain.valueobject;
 
-import lombok.NoArgsConstructor;
 import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
 
-import javax.persistence.Embeddable;
 import java.util.Objects;
 
-@Embeddable
-@NoArgsConstructor
 public class UserRole implements IValueObject<UserRole> {
     private int role;
 

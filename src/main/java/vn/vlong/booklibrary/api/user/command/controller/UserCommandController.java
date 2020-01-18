@@ -22,7 +22,7 @@ public class UserCommandController {
     }
 
     @PostMapping("/create")
-    public Success createUser(@RequestBody CreateUserRequest request) {
+    public Success createUser(@RequestBody CreateUserRequest request) throws Exception {
         userCommandService.createUser(request);
         return Success.builder().code(HttpStatus.OK.value()).message("Create user success").build();
     }
