@@ -1,9 +1,11 @@
 package vn.vlong.booklibrary.api.user.command.domain.entity;
 
 import lombok.Getter;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import vn.vlong.booklibrary.api.shared.domain.entity.BaseEntity;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
+import vn.vlong.booklibrary.api.user.command.domain.command.CreateUserCommand;
+import vn.vlong.booklibrary.api.user.command.domain.event.UserCreatedEvent;
 import vn.vlong.booklibrary.api.user.command.domain.valueobject.*;
 
 import java.util.List;
@@ -33,54 +35,45 @@ public class User extends BaseEntity<User> {
     @Getter
     private int version;
 
-    public User(FullName fullName, Email email, Password password, boolean isActive,
-                ActiveCode activeCode, UserRole userRole, int version) {
-        checkArgument(fullName, email, password, activeCode, userRole);
-
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.isActive = isActive;
-        this.activeCode = activeCode;
-        this.userRole = userRole;
-        this.version = version;
-    }
+    private boolean isDeleted;
 
     public User(List<Event> events) {
+        super();
         this.apply(events);
     }
 
-    public static User create(FullName fullName, Email email, Password password) {
-        return new User(fullName, email, password, false,
-                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE), 1);
+    public User(CreateUserCommand command) {
+        super();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        UserCreatedEvent event = new UserCreatedEvent(
+                command.getEmail(),
+                User.getStream(),
+                1,
+                command.getFirstName(),
+                command.getLastName(),
+                encoder.encode(command.getPassword()),
+                false,
+                encoder.encode(command.getEmail()),
+                Role.USER_ROLE.getValue()
+        );
+        this.apply(event);
+        this.addUnCommittedEvent(event);
     }
 
-    public String getStream() {
+    public static String getStream() {
         return "user";
     }
 
-    private void checkArgument(FullName fullName, Email email, Password password,
-                               ActiveCode activeCode, UserRole userRole) {
-
-        if (Objects.isNull(fullName)) {
-            throw new IllegalArgumentException("FullName is not valid");
-        }
-
-        if (Objects.isNull(email)) {
-            throw new IllegalArgumentException("Email is not valid");
-        }
-
-        if (Objects.isNull(password)) {
-            throw new IllegalArgumentException("Password is not valid");
-        }
-
-        if (Objects.isNull(activeCode)) {
-            throw new IllegalArgumentException("ActiveCode is not valid");
-        }
-
-        if (Objects.isNull(userRole)) {
-            throw new IllegalArgumentException("UserRole is not valid");
-        }
+    // Apply
+    private void apply(UserCreatedEvent event) {
+        this.email = new Email(event.getAggregateId());
+        this.fullName = new FullName(event.getFirstName(), event.getLastName());
+        this.password = new Password(event.getPassword());
+        this.isActive = event.isActive();
+        this.activeCode = new ActiveCode(event.getActiveCode());
+        this.userRole = new UserRole(Role.valueOf(event.getRole()));
+        this.version = event.getVersion();
+        this.isDeleted = false;
     }
 
     @Override

@@ -3,15 +3,17 @@ package vn.vlong.booklibrary.api.user.query.service;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 import vn.vlong.booklibrary.api.user.query.controller.request.GetUsersRequest;
 import vn.vlong.booklibrary.api.user.query.domain.entity.QUser;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 import vn.vlong.booklibrary.api.user.query.repository.IUserQueryRepository;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserQueryService {
@@ -22,8 +24,9 @@ public class UserQueryService {
         this.userQueryRepository = userQueryRepository;
     }
 
+    @Async("asyncExecutor")
     @LogExecutionTime
-    public List<User> getUsers(GetUsersRequest request) {
+    public CompletableFuture<Flux<User>> getUsers(GetUsersRequest request) {
         QUser qUser = QUser.user;
 
         BooleanExpression conditions = qUser.email.like("%" + request.getKeyword() + "%")
@@ -38,7 +41,10 @@ public class UserQueryService {
             conditions = conditions.and(qUser.role.eq(request.getRole()));
         }
 
-        return userQueryRepository.findAll(conditions, PageRequest.of(request.getOffset() - 1, request.getLimit()))
-                .getContent();
+        return CompletableFuture.completedFuture(
+                Flux.fromIterable(userQueryRepository.findAll(conditions,
+                        PageRequest.of(request.getOffset() - 1,
+                                request.getLimit()))
+                ));
     }
 }

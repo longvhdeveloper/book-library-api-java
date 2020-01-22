@@ -1,7 +1,6 @@
 package vn.vlong.booklibrary.api.user.command.domain.valueobject;
 
 import lombok.Getter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
 
@@ -17,7 +16,7 @@ public class Password implements IValueObject<Password> {
             throw new IllegalArgumentException("Password is not valid");
         }
 
-        this.password = new BCryptPasswordEncoder().encode(password);
+        this.password = password;
     }
 
     @Override

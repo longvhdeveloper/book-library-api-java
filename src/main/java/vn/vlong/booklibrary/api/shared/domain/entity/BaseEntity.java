@@ -1,12 +1,22 @@
 package vn.vlong.booklibrary.api.shared.domain.entity;
 
+import lombok.Getter;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseEntity<T> implements IEntity<T> {
+
     private static final String APPLY_METHOD_NAME = "apply";
+
+    @Getter
+    private List<Event> unCommittedEvents;
+
+    public BaseEntity() {
+        unCommittedEvents = new LinkedList<>();
+    }
 
     public void apply(List<Event> events) {
         events.forEach(this::apply);
@@ -19,6 +29,14 @@ public abstract class BaseEntity<T> implements IEntity<T> {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(String.format("Aggregate do not know how to apply %s", eventType));
         }
+    }
+
+    public void addUnCommittedEvent(Event event) {
+        unCommittedEvents.add(event);
+    }
+
+    public void clearUnCommittedEvents() {
+        unCommittedEvents.clear();
     }
 
     private Method getApplyMethod(

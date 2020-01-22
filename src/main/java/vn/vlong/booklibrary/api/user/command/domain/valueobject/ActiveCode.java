@@ -12,11 +12,11 @@ public class ActiveCode implements IValueObject<ActiveCode> {
     @Getter
     private String activeCode;
 
-    public ActiveCode(final String data) {
-        if (StringUtils.isEmpty(data)) {
-            throw new IllegalArgumentException("Data of active code is not valid");
+    public ActiveCode(final String activeCode) {
+        if (StringUtils.isEmpty(activeCode)) {
+            throw new IllegalArgumentException("Active code is not valid");
         }
-        activeCode = new BCryptPasswordEncoder().encode(data);
+        this.activeCode = activeCode;
     }
 
     @Override

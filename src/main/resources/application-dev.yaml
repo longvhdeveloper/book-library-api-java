@@ -21,6 +21,26 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
 
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
+      bindings:
+        user-topic-input:
+          binder: kafka
+          destination: user-topic
+          contentType: text/json
+          group: user-input-group-1
+        user-topic-output:
+          binder: kafka
+          destination: user-topic
+          contentType: text/json
+          group: user-output-group-1
+
+
 management:
   endpoints:
     web:
@@ -28,3 +48,9 @@ management:
         include:
           - info
           - httptrace
+async:
+  thread:
+    pool:
+      core-size: 2
+      max-size: 2
+      queue-capacity: 100

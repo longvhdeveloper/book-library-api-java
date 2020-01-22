@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import vn.vlong.booklibrary.api.user.query.controller.mapper.UserMapper;
 import vn.vlong.booklibrary.api.user.query.controller.request.GetUsersRequest;
 import vn.vlong.booklibrary.api.user.query.controller.response.UserDTO;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 import vn.vlong.booklibrary.api.user.query.service.UserQueryService;
 
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/users")
@@ -26,8 +27,8 @@ public class UserQueryController {
     }
 
     @GetMapping("/list")
-    public List<UserDTO> getUsers(GetUsersRequest request) {
-        List<User> users = userQueryService.getUsers(request);
-        return userMapper.toUserDTOs(users);
+    public Flux<UserDTO> getUsers(GetUsersRequest request) throws ExecutionException, InterruptedException {
+        Flux<User> users = userQueryService.getUsers(request).get();
+        return userMapper.toUserDTOFlux(users);
     }
 }

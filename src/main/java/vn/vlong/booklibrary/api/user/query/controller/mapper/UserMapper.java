@@ -1,6 +1,7 @@
 package vn.vlong.booklibrary.api.user.query.controller.mapper;
 
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import vn.vlong.booklibrary.api.user.query.controller.response.UserDTO;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 
@@ -22,5 +23,9 @@ public class UserMapper {
 
     public List<UserDTO> toUserDTOs(List<User> users) {
         return users.stream().map(this::toUserDTO).collect(Collectors.toList());
+    }
+
+    public Flux<UserDTO> toUserDTOFlux(Flux<User> users) {
+        return users.map(this::toUserDTO);
     }
 }

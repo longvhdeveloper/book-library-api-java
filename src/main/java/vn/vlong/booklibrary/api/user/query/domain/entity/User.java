@@ -31,9 +31,9 @@ public class User {
 
     private int role;
 
-    public User(String id, String firstName, String lastName, String password, boolean isActive,
+    public User(String email, String firstName, String lastName, String password, boolean isActive,
                 String activeCode, int role) {
-        this.email = id;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
