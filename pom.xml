@@ -175,7 +175,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-stream-dependencies</artifactId>
-                <version>3.0.1.RELEASE</version>
+                <version>Horsham.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
