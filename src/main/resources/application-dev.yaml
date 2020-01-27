@@ -54,3 +54,10 @@ async:
       core-size: 2
       max-size: 2
       queue-capacity: 100
+
+security:
+  jwt:
+    header: Authorization
+    prefix: Bearer
+    expiration: 86400
+    secret: ^$JwtSecretKey@
