@@ -1,14 +1,14 @@
 package vn.vlong.booklibrary.api.shared.producer;
 
+import java.util.List;
 import vn.vlong.booklibrary.api.shared.domain.entity.BaseEntity;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
 
-import java.util.List;
-
 public interface IProducer {
-    void send(Event event);
 
-    void send(List<Event> events);
+  void send(Event event);
 
-    void send(BaseEntity entity);
+  void send(List<Event> events);
+
+  void send(BaseEntity entity);
 }

@@ -1,11 +1,11 @@
-package vn.vlong.booklibrary.api.user.command.domain.event;
+package vn.vlong.booklibrary.api.user.query.domain.event;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
 
-@Getter
 @NoArgsConstructor
+@Getter
 public class UserCreatedEvent extends Event {
 
   private String firstName;

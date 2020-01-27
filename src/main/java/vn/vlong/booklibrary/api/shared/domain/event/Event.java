@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public abstract class Event implements IEvent {
-    protected String aggregateId;
-    protected int version;
-    protected String stream;
+
+  protected String aggregateId;
+  protected int version;
+  protected String stream;
 }

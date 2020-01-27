@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class GetUsersRequest {
-    private String keyword = "";
 
-    private Boolean isActive;
+  private String keyword = "";
 
-    private Integer role;
+  private Boolean isActive;
 
-    private int limit = 10;
+  private Integer role;
 
-    private int offset = 1;
+  private int limit = 10;
+
+  private int offset = 1;
 }
