@@ -17,7 +17,7 @@ public class UserPrincipal implements UserDetails {
   public UserPrincipal(User user) {
     this.user = user;
     authorities = Collections
-        .singleton(new SimpleGrantedAuthority(user.getUserRole().getRole().name()));
+        .singleton(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().getRole().getName()));
   }
 
   @Override

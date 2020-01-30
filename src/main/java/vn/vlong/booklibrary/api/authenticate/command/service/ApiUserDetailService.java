@@ -37,7 +37,6 @@ public class ApiUserDetailService implements UserDetailsService {
       throw new UsernameNotFoundException(
           String.format("User with email %s is not active", usernameOrEmail));
     }
-
     return new UserPrincipal(user);
   }
 }

@@ -62,7 +62,7 @@ public class User extends BaseEntity<User> {
         encoder.encode(command.getPassword()),
         false,
         encoder.encode(command.getEmail()),
-        Role.USER_ROLE.getValue()
+        command.getRole()
     );
     this.apply(event);
     this.addUnCommittedEvent(event);

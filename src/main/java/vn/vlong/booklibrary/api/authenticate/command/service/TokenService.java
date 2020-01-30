@@ -25,7 +25,6 @@ public class TokenService {
   public String generateToken(Authentication authentication) {
     UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
     Date now = new Date();
-    System.out.println(jwtConfig.getExpiration());
     Date expiration = new Date(now.getTime() + jwtConfig.getExpiration());
 
     return Jwts.builder()

@@ -13,6 +13,7 @@ import vn.vlong.booklibrary.api.user.command.controller.request.CreateUserReques
 import vn.vlong.booklibrary.api.user.command.domain.command.ActiveUserCommand;
 import vn.vlong.booklibrary.api.user.command.domain.command.CreateUserCommand;
 import vn.vlong.booklibrary.api.user.command.domain.entity.User;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.Role;
 import vn.vlong.booklibrary.api.user.command.producer.UserBinderProducer;
 import vn.vlong.booklibrary.api.user.exception.ActiveCodeIsNotMatchException;
 import vn.vlong.booklibrary.api.user.exception.UserAlreadyActiveException;
@@ -46,7 +47,8 @@ public class UserCommandService {
         request.getEmail(),
         request.getFirstName(),
         request.getLastName(),
-        request.getPassword()
+        request.getPassword(),
+        Role.USER_ROLE.getValue()
     );
 
     User user = new User(createUserCommand);

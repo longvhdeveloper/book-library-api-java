@@ -10,11 +10,14 @@ public class CreateUserCommand extends Command {
   private String firstName;
   private String lastName;
   private String password;
+  private int role;
 
-  public CreateUserCommand(String email, String firstName, String lastName, String password) {
+  public CreateUserCommand(String email, String firstName, String lastName, String password,
+      int role) {
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
     this.password = password;
+    this.role = role;
   }
 }

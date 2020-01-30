@@ -15,6 +15,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      use-new-id-generator-mappings: false
 
     properties:
       hibernate:
