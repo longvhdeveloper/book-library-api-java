@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import vn.vlong.booklibrary.api.authenticate.command.domain.entity.UserPrincipal;
 import vn.vlong.booklibrary.api.eventsource.service.EventSourceService;
 import vn.vlong.booklibrary.api.shared.domain.event.Event;
+import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 import vn.vlong.booklibrary.api.user.command.domain.entity.User;
 
 @Service
@@ -22,6 +23,7 @@ public class ApiUserDetailService implements UserDetailsService {
     this.eventSourceService = eventSourceService;
   }
 
+  @LogExecutionTime
   @Override
   public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
     List<Event> events = eventSourceService.loadEvents(usernameOrEmail, User.getStream());

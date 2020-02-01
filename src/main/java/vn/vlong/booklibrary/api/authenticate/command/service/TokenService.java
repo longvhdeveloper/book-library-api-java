@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import vn.vlong.booklibrary.api.authenticate.command.domain.entity.UserPrincipal;
 import vn.vlong.booklibrary.api.configuration.JwtConfig;
+import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 
 @Service
 @Slf4j
@@ -22,6 +23,7 @@ public class TokenService {
     this.jwtConfig = jwtConfig;
   }
 
+  @LogExecutionTime
   public String generateToken(Authentication authentication) {
     UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
     Date now = new Date();
@@ -35,6 +37,7 @@ public class TokenService {
         .compact();
   }
 
+  @LogExecutionTime
   public String getEmailFromToken(String token) {
     Claims claims = Jwts.parser().setSigningKey(jwtConfig.getSecret()).parseClaimsJws(token)
         .getBody();
@@ -42,6 +45,7 @@ public class TokenService {
     return claims.getSubject();
   }
 
+  @LogExecutionTime
   public boolean validateToken(String token) {
     try {
       Jwts.parser().setSigningKey(jwtConfig.getSecret()).parseClaimsJws(token);
