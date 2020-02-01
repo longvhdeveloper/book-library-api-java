@@ -25,7 +25,7 @@ public class AsyncConfig {
     executor.setCorePoolSize(coreSize);
     executor.setMaxPoolSize(maxSize);
     executor.setQueueCapacity(queueCapacity);
-    executor.setThreadNamePrefix("book-library-api-exec-");
+    executor.setThreadNamePrefix("book-api-exec-");
     executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
     return executor;
   }

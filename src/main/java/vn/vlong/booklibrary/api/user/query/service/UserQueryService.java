@@ -4,10 +4,10 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 import vn.vlong.booklibrary.api.user.query.controller.request.GetUsersRequest;
 import vn.vlong.booklibrary.api.user.query.domain.entity.QUser;
@@ -26,7 +26,7 @@ public class UserQueryService {
 
   @Async("asyncExecutor")
   @LogExecutionTime
-  public CompletableFuture<Flux<User>> getUsers(GetUsersRequest request) {
+  public CompletableFuture<Page<User>> getUsers(GetUsersRequest request) {
     QUser qUser = QUser.user;
 
     BooleanExpression conditions = qUser.email.like("%" + request.getKeyword() + "%")
@@ -42,9 +42,8 @@ public class UserQueryService {
     }
 
     return CompletableFuture.completedFuture(
-        Flux.fromIterable(userQueryRepository.findAll(conditions,
-            PageRequest.of(request.getOffset() - 1,
-                request.getLimit()))
-        ));
+        userQueryRepository.findAll(conditions, PageRequest.of(request.getOffset() - 1,
+            request.getLimit()))
+    );
   }
 }

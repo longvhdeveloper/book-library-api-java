@@ -1,5 +1,8 @@
 server:
   port: 8080
+  compression:
+    enabled: true
+    min-response-size: 1
 
 spring:
   datasource:
@@ -53,12 +56,12 @@ async:
   thread:
     pool:
       core-size: 2
-      max-size: 2
+      max-size: 5
       queue-capacity: 100
 
 security:
   jwt:
     header: Authorization
     prefix: Bearer
-    expiration: 86400
+    expiration: 86400000
     secret: ^$JwtSecretKey@
