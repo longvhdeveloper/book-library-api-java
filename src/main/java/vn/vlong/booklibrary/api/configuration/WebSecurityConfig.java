@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf().disable()
         .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeRequests().antMatchers("/users/create/", "/users/active").permitAll().and()
+        .authorizeRequests().antMatchers("/users/create", "/users/active").permitAll().and()
         .authorizeRequests().antMatchers("/auth/signin").permitAll().and()
         .authorizeRequests().anyRequest().authenticated();
 

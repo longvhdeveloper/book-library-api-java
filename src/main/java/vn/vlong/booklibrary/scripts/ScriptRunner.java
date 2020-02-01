@@ -1,6 +1,7 @@
 package vn.vlong.booklibrary.scripts;
 
-import java.util.concurrent.ExecutionException;
+import com.github.javafaker.Faker;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,8 +14,6 @@ import vn.vlong.booklibrary.api.user.command.domain.valueobject.Role;
 import vn.vlong.booklibrary.api.user.command.producer.UserBinderProducer;
 import vn.vlong.booklibrary.api.user.exception.ActiveCodeIsNotMatchException;
 import vn.vlong.booklibrary.api.user.exception.UserAlreadyActiveException;
-import vn.vlong.booklibrary.api.user.exception.UserCreateIsExistException;
-import vn.vlong.booklibrary.api.user.exception.UserIsNotFoundException;
 
 @Component
 @Slf4j
@@ -32,8 +31,7 @@ public class ScriptRunner implements CommandLineRunner {
   }
 
   private void addAdmin()
-      throws UserCreateIsExistException, ExecutionException, InterruptedException,
-      UserIsNotFoundException, ActiveCodeIsNotMatchException, UserAlreadyActiveException {
+      throws ActiveCodeIsNotMatchException, UserAlreadyActiveException {
     CreateUserCommand createUserCommand = new CreateUserCommand(
         "admin@myschool.com",
         "Jack",
@@ -58,5 +56,23 @@ public class ScriptRunner implements CommandLineRunner {
     eventSourceService.storeEvents(user.getUnCommittedEvents());
     userBinderProducer.send(user);
     log.info("ACTIVE ADMIN DONE !!!!");
+  }
+
+  private void generateUser() {
+    Faker faker = new Faker();
+    IntStream.range(0, 1000).forEach(i -> {
+      CreateUserCommand createUserCommand = new CreateUserCommand(
+          faker.internet().emailAddress(),
+          faker.name().firstName(),
+          faker.name().lastName(),
+          "123456",
+          Role.USER_ROLE.getValue()
+      );
+
+      User user = new User(createUserCommand);
+      eventSourceService.storeEvents(user.getUnCommittedEvents());
+      userBinderProducer.send(user);
+      log.info("CREATE USER {} DONE !!!!", i);
+    });
   }
 }

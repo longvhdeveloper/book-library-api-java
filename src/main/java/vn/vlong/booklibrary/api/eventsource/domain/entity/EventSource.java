@@ -3,11 +3,10 @@ package vn.vlong.booklibrary.api.eventsource.domain.entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
@@ -30,8 +29,7 @@ public class EventSource {
   private static final ObjectMapper mapper = new ObjectMapper();
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  private String id;
 
   @Column(name = "aggregate_id", nullable = false)
   private String aggregateId;
@@ -54,6 +52,7 @@ public class EventSource {
 
   public EventSource(String aggregateId, String stream, String typeName, long version,
       String payload) {
+    this.id = UUID.randomUUID().toString();
     this.aggregateId = aggregateId;
     this.stream = stream;
     this.typeName = typeName;

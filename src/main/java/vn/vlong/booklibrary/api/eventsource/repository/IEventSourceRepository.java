@@ -10,7 +10,7 @@ import vn.vlong.booklibrary.api.eventsource.domain.entity.EventSource;
 @Repository
 public interface IEventSourceRepository extends JpaRepository<EventSource, Integer> {
 
-  @Query("SELECT es FROM EventSource es WHERE es.aggregateId=:aggregateId AND es.stream=:stream")
+  @Query("SELECT es FROM EventSource es WHERE es.aggregateId=:aggregateId AND es.stream=:stream ORDER BY version ASC")
   List<EventSource> findByAggregateId(@Param("aggregateId") String aggregateId,
       @Param("stream") String stream);
 }
