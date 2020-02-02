@@ -1,6 +1,5 @@
 package vn.vlong.booklibrary.api.user.query.controller;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.vlong.booklibrary.api.user.query.controller.mapper.UserMapper;
 import vn.vlong.booklibrary.api.user.query.controller.request.GetUsersRequest;
-import vn.vlong.booklibrary.api.user.query.controller.response.UserDTO;
+import vn.vlong.booklibrary.api.user.query.controller.response.UserDTOList;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 import vn.vlong.booklibrary.api.user.query.service.UserQueryService;
 
@@ -29,10 +28,9 @@ public class UserQueryController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/list")
-  public List<UserDTO> getUsers(GetUsersRequest request)
+  public UserDTOList getUsers(GetUsersRequest request)
       throws ExecutionException, InterruptedException {
     Page<User> userPage = userQueryService.getUsers(request).get();
-    List<User> users = userPage.getContent();
-    return userMapper.toUserDTOs(users);
+    return userMapper.toUserDTOList(userPage);
   }
 }

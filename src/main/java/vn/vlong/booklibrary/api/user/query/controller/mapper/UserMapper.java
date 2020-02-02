@@ -1,10 +1,10 @@
 package vn.vlong.booklibrary.api.user.query.controller.mapper;
 
-import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import vn.vlong.booklibrary.api.user.query.controller.response.UserDTO;
+import vn.vlong.booklibrary.api.user.query.controller.response.UserDTOList;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 
 @Component
@@ -21,11 +21,11 @@ public class UserMapper {
         .build();
   }
 
-  public List<UserDTO> toUserDTOs(List<User> users) {
-    return users.stream().map(this::toUserDTO).collect(Collectors.toList());
-  }
-
-  public Flux<UserDTO> toUserDTOFlux(Flux<User> users) {
-    return users.map(this::toUserDTO);
+  public UserDTOList toUserDTOList(Page<User> userPage) {
+    return UserDTOList.builder()
+        .total(userPage.getTotalElements())
+        .totalPage(userPage.getTotalPages())
+        .users(userPage.getContent().stream().map(this::toUserDTO).collect(Collectors.toList()))
+        .build();
   }
 }
