@@ -146,9 +146,11 @@
         <artifactId>dockerfile-maven-plugin</artifactId>
         <configuration>
           <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
-          <registryUrl>https://index.docker.io:443/v1/</registryUrl>
-          <repository>${docker.image.prefix}/${project.artifactId}</repository>
-          <serverId>index.docker.io</serverId>
+          <!--          <registryUrl>https://index.docker.io:443/v1/</registryUrl>-->
+          <repository>
+            https://hub.docker.com/repository/docker/${docker.image.prefix}/${project.artifactId}
+          </repository>
+          <!--          <serverId>index.docker.io</serverId>-->
         </configuration>
         <executions>
           <execution>
