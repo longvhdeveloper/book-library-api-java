@@ -1,5 +1,7 @@
 Book Library API
 ---
+[![Build Status](https://travis-ci.com/longvhdeveloper/book-library-api.svg)](https://travis-ci.com/longvhdeveloper/book-library-api)
+
 This is side project for research purpose. I try implement CQRS and ES without using framework.<br/>
 Also have many framework support do it easy : Axon...<br/>
 It may be not clean code and best for optimize, but I will try to work it.
