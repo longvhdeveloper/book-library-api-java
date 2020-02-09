@@ -3,7 +3,6 @@ package vn.vlong.booklibrary.api.user.query.controller;
 import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +25,7 @@ public class UserQueryController {
     this.userMapper = userMapper;
   }
 
-  @PreAuthorize("hasRole('ADMIN')")
+  //@PreAuthorize("hasRole('ADMIN')")
   @GetMapping("/list")
   public UserDTOList getUsers(GetUsersRequest request)
       throws ExecutionException, InterruptedException {

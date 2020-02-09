@@ -1,12 +1,17 @@
-package vn.vlong.booklibrary.scripts;
+package vn.vlong.booklibrary.commandline;
 
 import com.github.javafaker.Faker;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import vn.vlong.booklibrary.api.eventsource.service.EventSourceService;
+import vn.vlong.booklibrary.api.shared.domain.event.Event;
+import vn.vlong.booklibrary.api.shared.logger.LogExecutionTime;
 import vn.vlong.booklibrary.api.user.command.domain.command.ActiveUserCommand;
 import vn.vlong.booklibrary.api.user.command.domain.command.CreateUserCommand;
 import vn.vlong.booklibrary.api.user.command.domain.entity.User;
@@ -17,7 +22,7 @@ import vn.vlong.booklibrary.api.user.exception.UserAlreadyActiveException;
 
 @Component
 @Slf4j
-public class ScriptRunner implements CommandLineRunner {
+public class CommandLineExecute implements CommandLineRunner {
 
   @Autowired
   private EventSourceService eventSourceService;
@@ -27,7 +32,6 @@ public class ScriptRunner implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-
   }
 
   private void addAdmin()
@@ -74,5 +78,33 @@ public class ScriptRunner implements CommandLineRunner {
       userBinderProducer.send(user);
       log.info("CREATE USER {} DONE !!!!", i);
     });
+  }
+
+  @LogExecutionTime
+  private void restoreUsers() {
+    // Get distinct event source
+    List<Event> events = eventSourceService.loadDistinctAllEvents();
+    // Iterator aggregate id list
+    events.forEach(event -> {
+      // Restore User by aggregate id
+      List<Event> eventList = eventSourceService
+          .loadEvents(event.getAggregateId(), event.getStream());
+      userBinderProducer.send(eventList);
+    });
+
+    System.out.println("RESTORE USER DONE !!!");
+  }
+
+  @Async("asyncExecutor")
+  @LogExecutionTime
+  public CompletableFuture<User> restoreUser(String aggregateId) {
+    List<Event> userEvents = eventSourceService.loadEvents(aggregateId, User.getStream());
+
+    if (userEvents.isEmpty()) {
+      throw new IllegalArgumentException(
+          String.format("User with email %s is not exist", aggregateId));
+    }
+
+    return CompletableFuture.completedFuture(new User(userEvents));
   }
 }
