@@ -1,96 +1,119 @@
 package vn.vlong.booklibrary.api.user.command.domain.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.hibernate.annotations.Type;
-import vn.vlong.booklibrary.api.user.command.domain.valueobject.*;
-
-import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+import lombok.Getter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import vn.vlong.booklibrary.api.shared.domain.entity.BaseEntity;
+import vn.vlong.booklibrary.api.shared.domain.event.Event;
+import vn.vlong.booklibrary.api.user.command.domain.command.ActiveUserCommand;
+import vn.vlong.booklibrary.api.user.command.domain.command.CreateUserCommand;
+import vn.vlong.booklibrary.api.user.command.domain.event.UserActivatedEvent;
+import vn.vlong.booklibrary.api.user.command.domain.event.UserCreatedEvent;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.ActiveCode;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.Email;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.FullName;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.Password;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.Role;
+import vn.vlong.booklibrary.api.user.command.domain.valueobject.UserRole;
+import vn.vlong.booklibrary.api.user.exception.ActiveCodeIsNotMatchException;
+import vn.vlong.booklibrary.api.user.exception.UserAlreadyActiveException;
 
-@Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idx_email", columnList = "email"),
-        @Index(name = "idx_is_active", columnList = "is_active"),
-        @Index(name = "idx_role", columnList = "role")
-})
-@NoArgsConstructor
-public class User {
+public class User extends BaseEntity<User> {
 
-    @EmbeddedId
-    @Getter
-    private UserId userId;
+  @Getter
+  private Email email;
 
-    @Embedded
-    @Getter
-    private FullName fullName;
+  @Getter
+  private FullName fullName;
 
-    @Embedded
-    @Getter
-    private Email email;
+  @Getter
+  private Password password;
 
-    @Embedded
-    @Getter
-    private Password password;
+  @Getter
 
-    @Getter
-    @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "is_active")
-    private boolean isActive;
+  private boolean isActive;
 
-    @Embedded
-    @Getter
-    private ActiveCode activeCode;
+  @Getter
+  private ActiveCode activeCode;
 
-    @Embedded
-    @Getter
-    private UserRole userRole;
+  @Getter
+  private UserRole userRole;
 
-    public User(UserId userId, FullName fullName, Email email, Password password, boolean isActive,
-                ActiveCode activeCode, UserRole userRole) {
+  @Getter
+  private int version;
 
-        checkArgument(userId, fullName, email, password, activeCode, userRole);
+  private boolean isDeleted;
 
-        this.userId = userId;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.isActive = isActive;
-        this.activeCode = activeCode;
-        this.userRole = userRole;
+  public User(List<Event> events) {
+    super();
+    this.apply(events);
+  }
+
+  public User(CreateUserCommand command) {
+    super();
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    UserCreatedEvent event = new UserCreatedEvent(
+        command.getEmail(),
+        User.getStream(),
+        1,
+        command.getFirstName(),
+        command.getLastName(),
+        encoder.encode(command.getPassword()),
+        false,
+        encoder.encode(command.getEmail()),
+        command.getRole()
+    );
+    this.apply(event);
+    this.addUnCommittedEvent(event);
+  }
+
+  public static String getStream() {
+    return "user";
+  }
+
+  public void handle(ActiveUserCommand command)
+      throws UserAlreadyActiveException, ActiveCodeIsNotMatchException {
+    if (isActive()) {
+      throw new UserAlreadyActiveException(
+          String.format("User with email %s is already active", email.getEmail()));
     }
 
-    public static User create(FullName fullName, Email email, Password password) {
-        return new User(new UserId(UUID.randomUUID(), 1), fullName, email, password, false,
-                new ActiveCode(RandomStringUtils.random(36)), new UserRole(Role.USER_ROLE));
+    if (!checkActiveCode(command.getActiveCode())) {
+      throw new ActiveCodeIsNotMatchException("Active code is not match.");
     }
 
-    private void checkArgument(UserId userId, FullName fullName, Email email, Password password,
-                               ActiveCode activeCode, UserRole userRole) {
-        if (Objects.isNull(userId)) {
-            throw new IllegalArgumentException("UserId is not valid");
-        }
+    UserActivatedEvent event = new UserActivatedEvent(command.getEmail(), User.getStream(),
+        version + 1, true);
+    this.apply(event);
+    this.addUnCommittedEvent(event);
+  }
 
-        if (Objects.isNull(fullName)) {
-            throw new IllegalArgumentException("FullName is not valid");
-        }
+  // Apply
+  private void apply(UserCreatedEvent event) {
+    this.email = new Email(event.getAggregateId());
+    this.fullName = new FullName(event.getFirstName(), event.getLastName());
+    this.password = new Password(event.getPassword());
+    this.isActive = event.isActive();
+    this.activeCode = new ActiveCode(event.getActiveCode());
+    this.userRole = new UserRole(Role.valueOf(event.getRole()));
+    this.version = event.getVersion();
+    this.isDeleted = false;
+  }
 
-        if (Objects.isNull(email)) {
-            throw new IllegalArgumentException("Email is not valid");
-        }
+  private void apply(UserActivatedEvent event) {
+    this.isActive = event.isActive();
+  }
 
-        if (Objects.isNull(password)) {
-            throw new IllegalArgumentException("Password is not valid");
-        }
+  private boolean checkActiveCode(String activeCode) {
+    return this.activeCode.getActiveCode().equals(activeCode);
+  }
 
-        if (Objects.isNull(activeCode)) {
-            throw new IllegalArgumentException("ActiveCode is not valid");
-        }
-
-        if (Objects.isNull(userRole)) {
-            throw new IllegalArgumentException("UserRole is not valid");
-        }
+  @Override
+  public boolean isSameIdentity(User other) {
+    if (Objects.isNull(other)) {
+      return false;
     }
+    return email.isSameValue(other.getEmail());
+  }
 }

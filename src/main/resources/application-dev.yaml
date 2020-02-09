@@ -1,5 +1,8 @@
 server:
   port: 8080
+  compression:
+    enabled: true
+    min-response-size: 1
 
 spring:
   datasource:
@@ -15,11 +18,42 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      use-new-id-generator-mappings: false
 
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
+
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
+      bindings:
+        user-topic-input:
+          binder: kafka
+          destination: user-topic
+          contentType: text/json
+          group: user-input-group-1
+        user-topic-output:
+          binder: kafka
+          destination: user-topic
+          contentType: text/json
+          group: user-output-group-1
+
+  redis:
+    port: 6379
+    timeout: 500
+    password:
+    sentinel:
+      master: mymaster
+      nodes:
+        - localhost:26379
+        - localhost:26380
+        - localhost:26381
 
 management:
   endpoints:
@@ -28,3 +62,16 @@ management:
         include:
           - info
           - httptrace
+async:
+  thread:
+    pool:
+      core-size: 2
+      max-size: 5
+      queue-capacity: 100
+
+security:
+  jwt:
+    header: Authorization
+    prefix: Bearer
+    expiration: 86400000
+    secret: ^$JwtSecretKey@

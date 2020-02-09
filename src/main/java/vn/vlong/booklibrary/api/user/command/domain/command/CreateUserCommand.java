@@ -5,16 +5,19 @@ import vn.vlong.booklibrary.api.shared.domain.command.Command;
 
 @Getter
 public class CreateUserCommand extends Command {
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String password;
 
-    public CreateUserCommand(Object source, String email, String firstName, String lastName, String password) {
-        super(source);
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-    }
+  private String email;
+  private String firstName;
+  private String lastName;
+  private String password;
+  private int role;
+
+  public CreateUserCommand(String email, String firstName, String lastName, String password,
+      int role) {
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.password = password;
+    this.role = role;
+  }
 }

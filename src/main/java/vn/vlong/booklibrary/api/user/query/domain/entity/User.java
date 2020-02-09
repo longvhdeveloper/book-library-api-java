@@ -1,56 +1,50 @@
 package vn.vlong.booklibrary.api.user.query.domain.entity;
 
+import java.io.Serializable;
+import javax.persistence.Id;
 import lombok.Getter;
-import org.springframework.data.mongodb.core.index.Indexed;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import vn.vlong.booklibrary.api.shared.domain.entity.IEntity;
-
-import javax.persistence.Id;
 
 @Document("users")
 @Getter
-public class User implements IEntity<User> {
+@NoArgsConstructor
+public class User implements Serializable {
 
-    @Id
-    private String id;
+  @Id
+  private String id;
 
-    @Indexed
-    @Field(name = "first_name")
-    private String firstName;
+  private String email;
 
-    @Indexed
-    @Field(name = "last_name")
-    private String lastName;
+  @Field(name = "first_name")
+  private String firstName;
 
-    @Indexed
-    private String email;
+  @Field(name = "last_name")
+  private String lastName;
 
-    private String password;
+  private String password;
 
-    @Indexed
-    @Field(name = "is_active")
-    private boolean isActive;
+  @Field(name = "is_active")
+  private boolean isActive;
 
-    @Field(name = "active_code")
-    private String activeCode;
+  @Field(name = "active_code")
+  private String activeCode;
 
-    private int role;
+  private int role;
 
-    public User(String id, String firstName, String lastName, String email, String password, boolean isActive,
-                String activeCode, int role) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.isActive = isActive;
-        this.activeCode = activeCode;
-        this.role = role;
-    }
+  public User(String email, String firstName, String lastName, String password, boolean isActive,
+      String activeCode, int role) {
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.password = password;
+    this.isActive = isActive;
+    this.activeCode = activeCode;
+    this.role = role;
+  }
 
-    @Override
-    public boolean isSameIdentity(User other) {
-        return false;
-    }
+  public void activeUser() {
+    this.isActive = true;
+  }
 }

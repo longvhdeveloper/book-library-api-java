@@ -6,7 +6,8 @@ import lombok.Getter;
 @Builder
 @Getter
 public class Error {
-    private int code;
-    private String message;
-    private String detail;
+
+  private int code;
+  private String message;
+  private String detail;
 }

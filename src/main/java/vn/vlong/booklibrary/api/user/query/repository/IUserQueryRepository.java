@@ -1,10 +1,20 @@
 package vn.vlong.booklibrary.api.user.query.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.stereotype.Repository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.Query;
 import vn.vlong.booklibrary.api.user.query.domain.entity.User;
 
-@Repository
-public interface IUserQueryRepository extends MongoRepository<User, String>, QuerydslPredicateExecutor<User> {
+
+public interface IUserQueryRepository {
+
+  void save(User user);
+
+  Page<User> findAll(Query query, Pageable pageable);
+
+  Optional<User> findById(String id) throws JsonProcessingException;
+
+  Optional<User> findByEmail(String email);
 }

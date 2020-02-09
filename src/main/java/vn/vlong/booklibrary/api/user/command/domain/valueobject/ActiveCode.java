@@ -1,35 +1,27 @@
 package vn.vlong.booklibrary.api.user.command.domain.valueobject;
 
+import java.util.Objects;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.StringUtils;
 import vn.vlong.booklibrary.api.shared.domain.valueobject.IValueObject;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import java.util.Objects;
-
-@Embeddable
-@NoArgsConstructor
 public class ActiveCode implements IValueObject<ActiveCode> {
 
-    @Getter
-    @Column(name = "active_code")
-    private String activeCode;
+  @Getter
+  private String activeCode;
 
-    public ActiveCode(final String data) {
-        if (StringUtils.isEmpty(data)) {
-            throw new IllegalArgumentException("Data of active code is not valid");
-        }
-        activeCode = new BCryptPasswordEncoder().encode(data);
+  public ActiveCode(final String activeCode) {
+    if (StringUtils.isEmpty(activeCode)) {
+      throw new IllegalArgumentException("Active code is not valid");
     }
+    this.activeCode = activeCode;
+  }
 
-    @Override
-    public boolean isSameValue(ActiveCode other) {
-        if (Objects.isNull(other)) {
-            return false;
-        }
-        return other.getActiveCode().equals(activeCode);
+  @Override
+  public boolean isSameValue(ActiveCode other) {
+    if (Objects.isNull(other)) {
+      return false;
     }
+    return other.getActiveCode().equals(activeCode);
+  }
 }
