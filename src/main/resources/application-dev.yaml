@@ -44,25 +44,16 @@ spring:
           contentType: text/json
           group: user-output-group-1
 
-  cache:
-    type: redis
   redis:
-    pool:
-      max-active: 2500
-      max-wait: 6000
-      max-idle: 500
-      min-idle: 100
-      testOnBorrow: true
-      blockWhenExhausted: true
-      numTestsPerEvictionRun: 3
-      timeBetweenEvictionRunsMillis: -1
-    database: 0
-    password: 1q2w3e4r
-    timeout: 1000
+    port: 6379
+    timeout: 500
+    password:
     sentinel:
-      master: redis-master
+      master: mymaster
       nodes:
-        - redis-sentinel:26379
+        - localhost:26379
+        - localhost:26380
+        - localhost:26381
 
 management:
   endpoints:

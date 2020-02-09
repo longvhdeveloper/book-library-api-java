@@ -1,13 +1,16 @@
 package vn.vlong.booklibrary.api.user.query.domain.entity;
 
+import java.io.Serializable;
 import javax.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document("users")
 @Getter
-public class User {
+@NoArgsConstructor
+public class User implements Serializable {
 
   @Id
   private String id;

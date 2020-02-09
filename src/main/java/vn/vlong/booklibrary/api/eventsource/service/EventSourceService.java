@@ -42,4 +42,9 @@ public class EventSourceService {
     List<EventSource> eventSources = eventSourceRepository.findByAggregateId(aggregateId, stream);
     return eventSources.stream().map(EventSource::toDomainEvent).collect(Collectors.toList());
   }
+
+  public List<Event> loadDistinctAllEvents() {
+    List<EventSource> eventSources = eventSourceRepository.findAllDistinct();
+    return eventSources.stream().map(EventSource::toDomainEvent).collect(Collectors.toList());
+  }
 }
