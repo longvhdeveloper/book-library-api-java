@@ -141,11 +141,11 @@
         <groupId>com.lazerycode.jmeter</groupId>
         <version>3.0.0</version>
       </plugin>
-
       <!-- spotify's dockerfile-maven-plugin -->
       <plugin>
         <artifactId>dockerfile-maven-plugin</artifactId>
         <configuration>
+          <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
           <registryUrl>https://index.docker.io:443/v1/</registryUrl>
           <repository>${docker.image.prefix}/${project.artifactId}</repository>
           <serverId>index.docker.io</serverId>
@@ -163,7 +163,6 @@
         <groupId>com.spotify</groupId>
         <version>1.4.13</version>
       </plugin>
-
       <!-- maven-dependency-plugin useful for creating docker image -->
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -187,26 +186,6 @@
         </executions>
         <groupId>org.apache.maven.plugins</groupId>
       </plugin>
-
-      <!-- Generating github  gh pages & maven project documents  -->
-      <plugin>
-        <artifactId>site-maven-plugin</artifactId>
-        <configuration>
-          <message>Building site for ${project.name} ${project.version}</message>
-          <server>github</server>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>site</phase>
-          </execution>
-        </executions>
-        <groupId>com.github.github</groupId>
-        <version>0.12</version>
-      </plugin>
-
     </plugins>
   </build>
   <dependencies>
@@ -384,39 +363,10 @@
     </dependencies>
   </dependencyManagement>
   <description>This is Pet Project Book Library API</description>
-  <developers>
-    <developer>
-      <email>vohoanglong07@gmail.com</email>
-      <id>longvhdeveloper</id>
-      <name>Long Vo Hoang</name>
-      <url>https://github.com/longvhdeveloper</url>
-    </developer>
-
-  </developers>
   <groupId>vn.vlong</groupId>
-
-  <issueManagement>
-    <system>GitHub Issues</system>
-    <url>https://github.com/longvhdeveloper/book-library-api/issues</url>
-  </issueManagement>
-
-  <licenses>
-    <license>
-      <distribution>repo</distribution>
-      <name>MIT License</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
-    </license>
-  </licenses>
-
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Useful for GitHub site  -->
   <name>Book Library API</name>
-
-  <organization>
-    <name>longvhdeveloper</name>
-    <url>https://github.com/longvhdeveloper/</url>
-  </organization>
 
   <parent>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -426,56 +376,12 @@
   </parent>
 
   <properties>
-    <!-- property useful for  spotify's dockerfile-maven-plugin -->
-    <docker.image.prefix>longvhdeveloper</docker.image.prefix>
-    <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
-    <!--Not adding artifacts to remote repository-->
-    <github.global.server>github</github.global.server>
-    <!-- GitHub OAuth token & server -->
+    <docker.image.prefix>longvo</docker.image.prefix>
     <java.version>1.8</java.version>
     <maven.deploy.skip>true</maven.deploy.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <groupId>org.apache.maven.plugins</groupId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>index</report>
-              <report>licenses</report>
-              <report>dependency-info</report>
-              <report>ci-management</report>
-              <report>dependencies</report>
-              <report>dependency-convergence</report>
-              <report>dependency-management</report>
-              <report>distribution-management</report>
-              <report>help</report>
-              <report>issue-management</report>
-              <report>mailing-lists</report>
-              <report>modules</report>
-              <report>plugin-management</report>
-              <report>plugins</report>
-              <report>team</report>
-              <report>scm</report>
-              <report>summary</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-        <version>3.0.0</version>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>3.1.1</version>
-      </plugin>
-    </plugins>
-  </reporting>
 
   <repositories>
     <repository>
@@ -487,14 +393,6 @@
       <url>http://repo.spring.io/libs-milestone</url>
     </repository>
   </repositories>
-
-  <scm>
-    <connection>scm:git:git://github.com/longvhdeveloper/book-library-api.git
-    </connection>
-    <developerConnection>scm:git:git://github.com/longvhdeveloper/book-library-api.git
-    </developerConnection>
-    <url>https://github.com/longvhdeveloper/book-library-api</url>
-  </scm>
 
   <version>0.0.1-SNAPSHOT</version>
 
