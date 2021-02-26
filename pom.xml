@@ -21,6 +21,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <modules>
+        <module>eureka-server</module>
+    </modules>
+
 
     <build>
         <pluginManagement>
