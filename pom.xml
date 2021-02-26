@@ -23,6 +23,7 @@
 
     <modules>
         <module>eureka-server</module>
+        <module>user-service</module>
     </modules>
 
 

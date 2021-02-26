@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    username: root
+    password: 1234567890
+    url: jdbc:mysql://localhost:3306/book_library?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+
+
+logging:
+  level:
+    org:
+      springframework: error
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    non-secure-port: 8081
+
+server:
+  port: 8081
